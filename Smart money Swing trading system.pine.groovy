@@ -1076,8 +1076,8 @@ alertcondition(bearish_fvg_cnd, 'Bearish FVG', 'Bearish FVG formed')
 no = input(7, title="Swing")
 Barcolor = input(true, title="Barcolor")
 Bgcolor = input(false, title="Bgcolor")
-adxlen = input(14, title="ADX Smoothing")
-dilen = input(14, title="DI Length")
+adxlen = input(5, title="ADX Smoothing")
+dilen = input(21, title="DI Length")
 minCandles = input(14, "Minimum Candles")
 
 dirmov(len) =>
@@ -1105,7 +1105,7 @@ Buy = ta.crossover(close, tsl)
 Sell = ta.crossunder(close, tsl)
 
 tr = ta.tr(true)
-atr = ta.sma(tr, 14)
+attr = ta.sma(tr, 14)
 adxValue = ta.sma(adx(dilen, adxlen), 14)
 
 // Calculate the number of bars since the last crossover or crossunder
@@ -1113,15 +1113,14 @@ barsSinceBuy = ta.barssince(Buy)
 barsSinceSell = ta.barssince(Sell)
 
 // Apply condition to show signal only if ADX value is below 35 and minimum number of candles is met
-showSignal = adxValue > 20 and (barsSinceBuy >= minCandles or barsSinceSell >= minCandles)
+showSignal = adxValue <=12 or adxValue >=18 or adxValue < 50 and (barsSinceBuy >= minCandles or barsSinceSell >= minCandles)
 
 plotshape(Buy and showSignal, "BUY", shape.labelup, location.belowbar, color=color.green, text="BUY", textcolor=color.black)
 plotshape(Sell and showSignal, "SELL", shape.labeldown, location.abovebar, color=color.red, text="SELL", textcolor=color.black)
 
 colr = close >= tsl ? color.green : close <= tsl ? color.red : na
 
-barcolor(Barcolor ? colr : na)
-bgcolor(Bgcolor ? colr : na)
+
 
 alertcondition(Buy and showSignal, title="Buy Signal", message="Buy")
 alertcondition(Sell and showSignal, title="Sell Signal", message="Sell")
